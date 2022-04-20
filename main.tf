@@ -65,7 +65,7 @@ module main_container_definition {
   port_mappings = [
     {
       containerPort = var.service_port
-      hostPort      = var.service_port
+      hostPort      = var.service_port == 80 ? 8080 : var.service_port ## Try to place public container on port 8080 (80 -> 8080)
       protocol      = "tcp"
     }
   ]
