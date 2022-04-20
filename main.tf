@@ -64,8 +64,8 @@ module main_container_definition {
   
   port_mappings = [
     {
-      containerPort = var.service_port
-      hostPort      = var.service_port == 80 ? 8080 : var.service_port ## Try to place public container on port 8080 (80 -> 8080)
+      containerPort = var.public == true ? 8080 : var.service_port
+      hostPort      = var.public == true ? 8080 : var.service_port
       protocol      = "tcp"
     }
   ]
@@ -103,7 +103,7 @@ resource aws_ecs_task_definition main {
   execution_role_arn        = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ecsTaskExecutionRole"
   cpu                       = var.task_cpu > var.container_cpu ? var.task_cpu : var.container_cpu
   memory                    = var.task_memory > var.container_memory ? var.task_memory : var.container_memory
-  network_mode              = "host" # "awsvpc"
+  network_mode              = "awsvpc"
   tags                      = merge(var.standard_tags, tomap({ Name = var.service_name }))
   container_definitions     = module.main_container_definition.json_map_encoded_list
 }
