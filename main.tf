@@ -64,8 +64,8 @@ module main_container_definition {
   
   port_mappings = [
     {
-      containerPort = var.public == true ? 8080 : var.service_port
-      hostPort      = var.public == true ? 8080 : var.service_port
+      containerPort = var.service_port
+      hostPort      = var.service_port
       protocol      = "tcp"
     }
   ]
