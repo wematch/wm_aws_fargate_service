@@ -103,7 +103,7 @@ resource aws_ecs_task_definition main {
   execution_role_arn        = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ecsTaskExecutionRole"
   cpu                       = var.task_cpu > var.container_cpu ? var.task_cpu : var.container_cpu
   memory                    = var.task_memory > var.container_memory ? var.task_memory : var.container_memory
-  network_mode              = "awsvpc"
+  network_mode              = "host" # "awsvpc"
   tags                      = merge(var.standard_tags, tomap({ Name = var.service_name }))
   container_definitions     = module.main_container_definition.json_map_encoded_list
 }
