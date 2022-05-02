@@ -1,6 +1,5 @@
 variable vpc_id {}
 variable subnets {}
-variable image_name {}
 variable name_prefix {}
 variable domain_name {}
 variable aws_lb_arn {}
