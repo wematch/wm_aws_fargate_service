@@ -1,6 +1,5 @@
 variable vpc_id {}
 variable subnets {}
-variable image_name {}
 variable name_prefix {}
 variable domain_name {}
 variable aws_lb_arn {}
@@ -10,9 +9,17 @@ variable security_groups {}
 variable aws_lb_certificate_arn {}
 variable logdna_lambda_logs_arn {}
 
+variable image_name {
+  default = "nginx"
+}
 variable image_version {
   type    = string
   default = "latest"
+}
+variable service_image {
+  type        = string
+  default     = null
+  description = "Full ECR Url. Example: 000000000000.dkr.ecr.us-west-2.amazonaws.com/repo_name:image_version"
 }
 variable wm_instance {
   type    = string

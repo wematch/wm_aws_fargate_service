@@ -56,7 +56,7 @@ module main_container_definition {
   version = "0.58.1"
 
   container_name                = var.service_name
-  container_image               = "${var.ecr_account_id}.dkr.ecr.${var.ecr_region}.amazonaws.com/${var.image_name}:${var.image_version}"
+  container_image               = var.service_image
   container_cpu                 = var.container_cpu
   container_memory              = var.container_memory
   container_memory_reservation  = var.container_memory
