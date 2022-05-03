@@ -9,6 +9,9 @@ variable security_groups {}
 variable aws_lb_certificate_arn {}
 variable logdna_lambda_logs_arn {}
 
+variable image_name {
+  default = "nginx"
+}
 variable image_version {
   type    = string
   default = "latest"
