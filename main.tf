@@ -106,6 +106,7 @@ resource aws_ecs_task_definition main {
   network_mode              = "awsvpc"
   tags                      = merge(var.standard_tags, tomap({ Name = var.service_name }))
   container_definitions     = module.main_container_definition.json_map_encoded_list
+  task_role_arn             = var.task_role_arn
 }
 
 
