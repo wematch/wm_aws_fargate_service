@@ -107,6 +107,9 @@ variable public {
 variable launch_type {
   default = "FARGATE"
 }
+variable retention_in_days {
+  default = 7
+}
 
 variable mount_points {
   type = list(object({
