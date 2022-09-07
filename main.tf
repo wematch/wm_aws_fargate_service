@@ -39,6 +39,21 @@ resource aws_ecs_service main {
     subnets           = var.subnets
   }
 
+  dynamic load_balancer {
+    for_each = var.public ? true : false
+    content {
+      target_group_arn  = aws_lb_target_group.main.arn
+      container_name    = var.service_name
+      container_port    = var.service_port
+    }
+  }
+
+  # load_balancer {
+  #   target_group_arn  = aws_lb_target_group.main.arn
+  #   container_name    = var.service_name
+  #   container_port    = var.service_port
+  # }  
+
   service_registries {
     registry_arn = aws_service_discovery_service.main.arn
   }
