@@ -39,15 +39,40 @@ resource aws_ecs_service main {
     subnets           = var.subnets
   }
 
-  load_balancer {
-    target_group_arn  = aws_lb_target_group.main.arn
-    container_name    = var.service_name
-    container_port    = var.service_port
+  # load_balancer {
+  #   target_group_arn  = aws_lb_target_group.main.arn
+  #   container_name    = var.service_name
+  #   container_port    = var.service_port
+  # }
+
+  service_registries {
+    registry_arn = aws_service_discovery_service.main.arn
   }
 
   depends_on = [data.aws_lb.passed_on]
 }
 
+
+# ---------------------------------------------------
+#     Service Discovery
+# ---------------------------------------------------
+resource aws_service_discovery_service main {
+  name = "${var.name_prefix}-${var.wm_instance}-${var.service_name}"
+
+  dns_config {
+    namespace_id    = var.service_discovery_id
+    routing_policy  = "MULTIVALUE"
+
+    dns_records {
+      ttl  = 10
+      type = "A"
+    }
+  }
+
+  health_check_custom_config {
+    failure_threshold = 1
+  }
+}
 
 # ---------------------------------------------------
 #     Container - Main
@@ -119,59 +144,59 @@ resource time_sleep wait {
   create_duration = "30s"
 }
 
-resource aws_lb_target_group main {
-  name                          = "${var.name_prefix}-${var.wm_instance}-${var.service_name}-tg"
-  port                          = var.service_port
-  protocol                      = "HTTP"
-  vpc_id                        = var.vpc_id
-  load_balancing_algorithm_type = "round_robin"
-  target_type                   = "ip"
-  depends_on                    = [data.aws_lb.passed_on]
+# resource aws_lb_target_group main {
+#   name                          = "${var.name_prefix}-${var.wm_instance}-${var.service_name}-tg"
+#   port                          = var.service_port
+#   protocol                      = "HTTP"
+#   vpc_id                        = var.vpc_id
+#   load_balancing_algorithm_type = "round_robin"
+#   target_type                   = "ip"
+#   depends_on                    = [data.aws_lb.passed_on]
   
-  health_check {
-    healthy_threshold   = 3
-    unhealthy_threshold = 10
-    timeout             = 5
-    interval            = 10
-    path                = "/health"
-    port                = var.service_port
-  }
-}
+#   health_check {
+#     healthy_threshold   = 3
+#     unhealthy_threshold = 10
+#     timeout             = 5
+#     interval            = 10
+#     path                = "/health"
+#     port                = var.service_port
+#   }
+# }
 
-resource aws_lb_listener main {
-  load_balancer_arn = data.aws_lb.passed_on.arn
-  port              = var.public == true ? var.external_port : var.service_port
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
-  certificate_arn   = var.aws_lb_certificate_arn
+# resource aws_lb_listener main {
+#   load_balancer_arn = data.aws_lb.passed_on.arn
+#   port              = var.public == true ? var.external_port : var.service_port
+#   protocol          = "HTTPS"
+#   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
+#   certificate_arn   = var.aws_lb_certificate_arn
 
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.main.arn
-  }
-}
+#   default_action {
+#     type             = "forward"
+#     target_group_arn = aws_lb_target_group.main.arn
+#   }
+# }
 
-resource aws_lb_listener_rule block_header_rule {
-  count         =  var.public == true ? 0 : 1
-  listener_arn  = aws_lb_listener.main.arn
-  priority      = 100
+# resource aws_lb_listener_rule block_header_rule {
+#   count         =  var.public == true ? 0 : 1
+#   listener_arn  = aws_lb_listener.main.arn
+#   priority      = 100
 
-  condition {
-    http_header {
-      http_header_name = "X-Forwarded-Host"
-      values           = ["*"]
-    }
-  }
+#   condition {
+#     http_header {
+#       http_header_name = "X-Forwarded-Host"
+#       values           = ["*"]
+#     }
+#   }
 
-  action {
-    type = "fixed-response"
-    fixed_response {
-      content_type  = "text/plain"
-      message_body  = "Invalid host header."
-      status_code   = 400
-    }
-  }
-}
+#   action {
+#     type = "fixed-response"
+#     fixed_response {
+#       content_type  = "text/plain"
+#       message_body  = "Invalid host header."
+#       status_code   = 400
+#     }
+#   }
+# }
 
 
 # ---------------------------------------------------
