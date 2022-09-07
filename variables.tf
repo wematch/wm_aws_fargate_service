@@ -22,7 +22,7 @@ variable service_image {
   default     = null
   description = "Full ECR Url. Example: 000000000000.dkr.ecr.us-west-2.amazonaws.com/repo_name:image_version"
 }
-variable wm_instance {
+variable wenv {
   type    = string
   default = "fargate"
 }

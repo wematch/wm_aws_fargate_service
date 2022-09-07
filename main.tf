@@ -12,7 +12,7 @@ resource aws_cloudwatch_log_group ecs_group {
 #    ECS Service
 # ---------------------------------------------------
 resource aws_ecs_service main {
-  name                                = "${var.name_prefix}-${var.wm_instance}-${var.service_name}"
+  name                                = "${var.name_prefix}-${var.wenv}-${var.service_name}"
   cluster                             = var.cluster_name
   propagate_tags                      = "SERVICE"
   deployment_maximum_percent          = 200
@@ -39,17 +39,9 @@ resource aws_ecs_service main {
     subnets           = var.subnets
   }
 
-  # load_balancer {
-  #   target_group_arn  = aws_lb_target_group.main.arn
-  #   container_name    = var.service_name
-  #   container_port    = var.service_port
-  # }
-
   service_registries {
     registry_arn = aws_service_discovery_service.main.arn
   }
-
-  depends_on = [data.aws_lb.passed_on]
 }
 
 
@@ -57,7 +49,7 @@ resource aws_ecs_service main {
 #     Service Discovery
 # ---------------------------------------------------
 resource aws_service_discovery_service main {
-  name = "${var.name_prefix}-${var.wm_instance}-${var.service_name}"
+  name = "${var.name_prefix}-${var.wenv}-${var.service_name}"
 
   dns_config {
     namespace_id    = var.service_discovery_id
@@ -124,7 +116,7 @@ module main_container_definition {
 #     Task Definition
 # ---------------------------------------------------
 resource aws_ecs_task_definition main {
-  family                    = "${var.name_prefix}-${var.wm_instance}-${var.service_name}"
+  family                    = "${var.name_prefix}-${var.wenv}-${var.service_name}"
   requires_compatibilities  = [var.launch_type]
   execution_role_arn        = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ecsTaskExecutionRole"
   cpu                       = var.task_cpu > var.container_cpu ? var.task_cpu : var.container_cpu
@@ -144,37 +136,39 @@ resource time_sleep wait {
   create_duration = "30s"
 }
 
-# resource aws_lb_target_group main {
-#   name                          = "${var.name_prefix}-${var.wm_instance}-${var.service_name}-tg"
-#   port                          = var.service_port
-#   protocol                      = "HTTP"
-#   vpc_id                        = var.vpc_id
-#   load_balancing_algorithm_type = "round_robin"
-#   target_type                   = "ip"
-#   depends_on                    = [data.aws_lb.passed_on]
+resource aws_lb_target_group main {
+  count                         = var.public == true ? 1 : 0
+  name                          = "${var.name_prefix}-${var.wenv}-${var.service_name}-tg"
+  port                          = var.service_port
+  protocol                      = "HTTP"
+  vpc_id                        = var.vpc_id
+  load_balancing_algorithm_type = "round_robin"
+  target_type                   = "ip"
+  depends_on                    = [data.aws_lb.passed_on]
   
-#   health_check {
-#     healthy_threshold   = 3
-#     unhealthy_threshold = 10
-#     timeout             = 5
-#     interval            = 10
-#     path                = "/health"
-#     port                = var.service_port
-#   }
-# }
+  health_check {
+    healthy_threshold   = 3
+    unhealthy_threshold = 10
+    timeout             = 5
+    interval            = 10
+    path                = "/health"
+    port                = var.service_port
+  }
+}
 
-# resource aws_lb_listener main {
-#   load_balancer_arn = data.aws_lb.passed_on.arn
-#   port              = var.public == true ? var.external_port : var.service_port
-#   protocol          = "HTTPS"
-#   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
-#   certificate_arn   = var.aws_lb_certificate_arn
+resource aws_lb_listener main {
+  count             = var.public == true ? 1 : 0
+  load_balancer_arn = data.aws_lb.passed_on.arn
+  port              = var.external_port
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
+  certificate_arn   = var.aws_lb_certificate_arn
 
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.main.arn
-#   }
-# }
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.main.arn
+  }
+}
 
 # resource aws_lb_listener_rule block_header_rule {
 #   count         =  var.public == true ? 0 : 1
@@ -203,7 +197,7 @@ resource time_sleep wait {
 #    LogDNA subsciprion
 # ---------------------------------------------------
 resource aws_cloudwatch_log_subscription_filter lambda_logfilter {
-  name            = "${var.name_prefix}-${var.wm_instance}-${var.service_name}-filter"
+  name            = "${var.name_prefix}-${var.wenv}-${var.service_name}-filter"
   log_group_name  = "${var.name_prefix}/fargate/${var.cluster_name}/${var.service_name}/"
   filter_pattern  = ""
   destination_arn = var.logdna_lambda_logs_arn
