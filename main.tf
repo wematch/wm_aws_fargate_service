@@ -40,7 +40,7 @@ resource aws_ecs_service main {
   }
 
   dynamic load_balancer {
-    for_each = var.public ? true : false
+    for_each = var.public ? [1] : []
     content {
       target_group_arn  = aws_lb_target_group.main.arn
       container_name    = var.service_name
