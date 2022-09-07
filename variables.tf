@@ -10,7 +10,7 @@ variable aws_lb_certificate_arn {}
 variable logdna_lambda_logs_arn {}
 
 variable service_discovery_id {
-  default = null
+  default = ""
 }
 
 variable image_name {
