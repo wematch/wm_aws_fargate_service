@@ -42,7 +42,7 @@ resource aws_ecs_service main {
   dynamic load_balancer {
     for_each = var.public ? [1] : []
     content {
-      target_group_arn  = aws_lb_target_group.main.[*].arn
+      target_group_arn  = aws_lb_target_group.main[*].arn
       container_name    = var.service_name
       container_port    = var.service_port
     }
@@ -51,7 +51,7 @@ resource aws_ecs_service main {
   dynamic service_registries {
     for_each = var.public ? [] : [1]
     content {
-      registry_arn = aws_service_discovery_service.main.[*].arn
+      registry_arn = aws_service_discovery_service.main[*].arn
     }
   }
 
