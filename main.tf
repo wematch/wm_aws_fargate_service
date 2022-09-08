@@ -120,7 +120,11 @@ module main_container_definition {
     {
       name  = "APP_PORT"
       value = var.service_port
-    }
+    },
+    {
+      name  = "SERVICE_PORT"
+      value = var.service_port
+    }    
   ])
 
   log_configuration = {
