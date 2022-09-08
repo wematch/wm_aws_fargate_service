@@ -149,11 +149,6 @@ resource aws_ecs_task_definition main {
 # ---------------------------------------------------
 #    Internal Load Balancer
 # ---------------------------------------------------
-resource time_sleep wait {
-  depends_on      = [aws_ecs_service.main]
-  create_duration = "30s"
-}
-
 resource aws_lb_target_group main {
   count                         = var.public == true ? 1 : 0
   name                          = "${var.name_prefix}-${var.wenv}-${var.service_name}-tg"
