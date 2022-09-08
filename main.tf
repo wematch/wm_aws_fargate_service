@@ -63,6 +63,7 @@ resource aws_ecs_service main {
 resource aws_service_discovery_service main {
   count = var.public == true ? 0 : 1
   name  = "${var.name_prefix}-${var.wenv}-${var.service_name}"
+  tags  = merge(var.standard_tags, tomap({ Name = var.service_name }))
 
   dns_config {
     namespace_id    = var.service_discovery_id
