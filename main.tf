@@ -54,16 +54,6 @@ resource aws_ecs_service main {
       registry_arn = aws_service_discovery_service.main[0].arn
     }
   }
-
-  # load_balancer {
-  #   target_group_arn  = aws_lb_target_group.main.arn
-  #   container_name    = var.service_name
-  #   container_port    = var.service_port
-  # }  
-
-  # service_registries {
-  #   registry_arn = aws_service_discovery_service.main.arn
-  # }
 }
 
 
@@ -196,29 +186,6 @@ resource aws_lb_listener main {
     target_group_arn = aws_lb_target_group.main[0].arn
   }
 }
-
-# resource aws_lb_listener_rule block_header_rule {
-#   count         =  var.public == true ? 0 : 1
-#   listener_arn  = aws_lb_listener.main.arn
-#   priority      = 100
-
-#   condition {
-#     http_header {
-#       http_header_name = "X-Forwarded-Host"
-#       values           = ["*"]
-#     }
-#   }
-
-#   action {
-#     type = "fixed-response"
-#     fixed_response {
-#       content_type  = "text/plain"
-#       message_body  = "Invalid host header."
-#       status_code   = 400
-#     }
-#   }
-# }
-
 
 # ---------------------------------------------------
 #    LogDNA subsciprion

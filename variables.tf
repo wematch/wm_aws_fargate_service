@@ -102,9 +102,6 @@ variable additional_containers {
   description = "Additional containers definition"
   default     = []
 }
-# variable s3_log_bucket {
-#   type = string
-# }
 variable public {
   default = false
 }
