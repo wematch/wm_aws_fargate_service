@@ -2,7 +2,6 @@ variable vpc_id {}
 variable subnets {}
 variable name_prefix {}
 variable domain_name {}
-variable aws_lb_arn {}
 variable ecr_region {}
 variable ecr_account_id {}
 variable security_groups {}
@@ -10,10 +9,12 @@ variable aws_lb_certificate_arn {}
 variable logdna_lambda_logs_arn {}
 
 variable service_discovery_id {
+  type    = string
   default = ""
 }
 
 variable image_name {
+  type    = string
   default = "nginx"
 }
 variable image_version {
