@@ -157,7 +157,6 @@ resource aws_lb_target_group main {
   vpc_id                        = var.vpc_id
   load_balancing_algorithm_type = "round_robin"
   target_type                   = "ip"
-  depends_on                    = [data.aws_lb.passed_on]
   
   health_check {
     healthy_threshold   = 3
