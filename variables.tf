@@ -13,6 +13,11 @@ variable service_discovery_id {
   default = ""
 }
 
+variable aws_lb_arn {
+  type    = string
+  default = ""
+}
+
 variable image_name {
   type    = string
   default = "nginx"
