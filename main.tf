@@ -170,7 +170,7 @@ resource aws_lb_target_group main {
 
 resource aws_lb_listener main {
   count             = var.public == true ? 1 : 0
-  load_balancer_arn = data.aws_lb.passed_on.arn
+  load_balancer_arn = var.aws_lb_arn
   port              = var.external_port
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
