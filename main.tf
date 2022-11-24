@@ -21,8 +21,6 @@ resource aws_ecs_service main {
   health_check_grace_period_seconds   = var.health_check_grace_period_seconds
   tags                                = merge(var.standard_tags, tomap({ Name = var.service_name }))
 
-## condition ? true_val : false_val
-
   capacity_provider_strategy {
     capacity_provider = "FARGATE"
     weight            = 1
