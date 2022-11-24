@@ -7,6 +7,12 @@ variable ecr_account_id {}
 variable security_groups {}
 variable logdna_lambda_logs_arn {}
 
+variable run_on_spots {
+  type        = bool
+  default     = false
+  description = "Set true to run 100% on FARGATE_SPOT"
+}
+
 variable aws_lb_certificate_arn {
   type        = string
   default     = ""

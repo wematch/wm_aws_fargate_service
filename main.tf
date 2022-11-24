@@ -7,7 +7,6 @@ resource aws_cloudwatch_log_group ecs_group {
   retention_in_days = var.retention_in_days
 }
 
-
 # ---------------------------------------------------
 #    ECS Service
 # ---------------------------------------------------
@@ -22,16 +21,18 @@ resource aws_ecs_service main {
   health_check_grace_period_seconds   = var.health_check_grace_period_seconds
   tags                                = merge(var.standard_tags, tomap({ Name = var.service_name }))
 
-  # capacity_provider_strategy {
-  #   capacity_provider = "FARGATE"
-  #   weight            = 1
-  #   base              = 1
-  # }
+## condition ? true_val : false_val
+
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE"
+    weight            = var.run_on_spots = true ? 0 : 1
+    base              = var.run_on_spots = true ? 0 : 1
+  }
   
   capacity_provider_strategy {
     capacity_provider = "FARGATE_SPOT"
-    weight            = 1
-    base              = 1
+    weight            = var.run_on_spots = true ? 1 : 0
+    base              = var.run_on_spots = true ? 1 : 1
   }
 
   network_configuration {
@@ -55,7 +56,6 @@ resource aws_ecs_service main {
     }
   }
 }
-
 
 # ---------------------------------------------------
 #     Service Discovery
@@ -129,7 +129,6 @@ module main_container_definition {
   }
 }
 
-
 # ---------------------------------------------------
 #     Task Definition
 # ---------------------------------------------------
@@ -144,7 +143,6 @@ resource aws_ecs_task_definition main {
   container_definitions     = module.main_container_definition.json_map_encoded_list
   task_role_arn             = var.task_role_arn
 }
-
 
 # ---------------------------------------------------
 #    Internal Load Balancer
