@@ -25,14 +25,14 @@ resource aws_ecs_service main {
 
   capacity_provider_strategy {
     capacity_provider = "FARGATE"
-    weight            = var.run_on_spots == true ? 0 : 1
-    base              = 1
+    weight            = 1
+    base              = var.run_on_spots == true ? 0 : 1
   }
   
   capacity_provider_strategy {
     capacity_provider = "FARGATE_SPOT"
-    weight            = var.run_on_spots == true ? 1 : 0
-    base              = 1
+    weight            = 1
+    base              = var.run_on_spots == true ? 1 : 0
   }
 
   network_configuration {
