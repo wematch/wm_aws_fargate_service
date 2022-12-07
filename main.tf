@@ -91,6 +91,7 @@ module main_container_definition {
   container_memory              = var.container_memory
   container_memory_reservation  = var.container_memory
   secrets                       = var.secrets
+  command                       = var.command
   
   port_mappings = [
     {
