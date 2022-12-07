@@ -129,6 +129,11 @@ variable health_check_grace_period_seconds {
   default     = null
   description = "Set 300 if your container needs to build / initialize something on launch"
 }
+variable health_check_path {
+  type        = string
+  default     = "/health"
+  description = "Health checks path"
+}
 variable additional_containers {
   description = "Additional containers definition"
   default     = []
