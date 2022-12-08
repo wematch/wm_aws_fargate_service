@@ -159,7 +159,8 @@ resource aws_lb_target_group main {
     healthy_threshold   = 3
     unhealthy_threshold = 10
     timeout             = 5
-    interval            = 10
+    interval            = 30
+    matcher             = "200-302"
     path                = var.health_check_path
     port                = var.service_port
   }
@@ -168,10 +169,10 @@ resource aws_lb_target_group main {
 resource aws_lb_listener main {
   count             = var.public == true ? 1 : 0
   load_balancer_arn = var.aws_lb_arn
-  port              = var.external_port
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
-  certificate_arn   = var.aws_lb_certificate_arn
+  port              = 80 # var.external_port
+  protocol          = "HTTP" # "HTTPS"
+  # ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
+  # certificate_arn   = var.aws_lb_certificate_arn
 
   default_action {
     type             = "forward"
