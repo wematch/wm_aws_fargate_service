@@ -1,7 +1,6 @@
-# aws_ecs_fargate_service
-Wematch Terraform module for deploying Fargate services
+## Requirements
 
-## [!] DO NOT rename this repo or everything will die +) 
+No requirements.
 
 ## Providers
 
@@ -28,7 +27,6 @@ Wematch Terraform module for deploying Fargate services
 | [aws_service_discovery_service.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/service_discovery_service) | resource |
 | [aws_acm_certificate.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/acm_certificate) | data source |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
-| [aws_lb.passed_on](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/lb) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [aws_route53_zone.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
 
@@ -37,7 +35,8 @@ Wematch Terraform module for deploying Fargate services
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_additional_containers"></a> [additional\_containers](#input\_additional\_containers) | Additional containers definition | `list` | `[]` | no |
-| <a name="input_aws_lb_certificate_arn"></a> [aws\_lb\_certificate\_arn](#input\_aws\_lb\_certificate\_arn) | n/a | `any` | n/a | yes |
+| <a name="input_aws_lb_arn"></a> [aws\_lb\_arn](#input\_aws\_lb\_arn) | n/a | `string` | `""` | no |
+| <a name="input_aws_lb_certificate_arn"></a> [aws\_lb\_certificate\_arn](#input\_aws\_lb\_certificate\_arn) | Certificate ARN. Used only if public != true | `string` | `""` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | ECS Cluster name | `string` | `"fargate"` | no |
 | <a name="input_command"></a> [command](#input\_command) | Commands to run on launch | `list(string)` | `null` | no |
 | <a name="input_container_cpu"></a> [container\_cpu](#input\_container\_cpu) | Container vCPU. 256 = 0.25 vCPU \| 1024 = 1.0 vCPU \| 4096 = 4.0 vCPU (max) | `number` | `256` | no |
@@ -52,6 +51,7 @@ Wematch Terraform module for deploying Fargate services
 | <a name="input_environment"></a> [environment](#input\_environment) | List of Environment Variables | <pre>list(object({<br>    name  = any<br>    value = any<br>  }))</pre> | `[]` | no |
 | <a name="input_external_port"></a> [external\_port](#input\_external\_port) | You do not need to specify it | `number` | `443` | no |
 | <a name="input_health_check_grace_period_seconds"></a> [health\_check\_grace\_period\_seconds](#input\_health\_check\_grace\_period\_seconds) | Set 300 if your container needs to build / initialize something on launch | `number` | `null` | no |
+| <a name="input_health_check_path"></a> [health\_check\_path](#input\_health\_check\_path) | Health checks path | `string` | `"/health"` | no |
 | <a name="input_image_name"></a> [image\_name](#input\_image\_name) | n/a | `string` | `"nginx"` | no |
 | <a name="input_image_version"></a> [image\_version](#input\_image\_version) | n/a | `string` | `"latest"` | no |
 | <a name="input_launch_type"></a> [launch\_type](#input\_launch\_type) | n/a | `string` | `"FARGATE"` | no |
@@ -62,6 +62,7 @@ Wematch Terraform module for deploying Fargate services
 | <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | n/a | `any` | n/a | yes |
 | <a name="input_public"></a> [public](#input\_public) | Set as true to use with public load balancer | `bool` | `false` | no |
 | <a name="input_retention_in_days"></a> [retention\_in\_days](#input\_retention\_in\_days) | Amount of days to store service logs | `number` | `7` | no |
+| <a name="input_run_on_spots"></a> [run\_on\_spots](#input\_run\_on\_spots) | Set true to run 100% on FARGATE\_SPOT | `bool` | `false` | no |
 | <a name="input_secrets"></a> [secrets](#input\_secrets) | List of Secrets | <pre>list(object({<br>    name      = string<br>    valueFrom = string<br>  }))</pre> | `[]` | no |
 | <a name="input_security_groups"></a> [security\_groups](#input\_security\_groups) | n/a | `any` | n/a | yes |
 | <a name="input_service_discovery_id"></a> [service\_discovery\_id](#input\_service\_discovery\_id) | n/a | `string` | `""` | no |
