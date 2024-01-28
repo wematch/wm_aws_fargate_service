@@ -1,8 +1,3 @@
-aws_ecs_fargate_service
-Wematch Terraform module for deploying Fargate services
-
-## [!] DO NOT rename this repo or everything will die +) 
-
 ## Requirements
 
 No requirements.
@@ -30,10 +25,8 @@ No requirements.
 | [aws_lb_listener.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
 | [aws_lb_target_group.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group) | resource |
 | [aws_service_discovery_service.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/service_discovery_service) | resource |
-| [aws_acm_certificate.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/acm_certificate) | data source |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
-| [aws_route53_zone.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
 
 ## Inputs
 
@@ -49,7 +42,6 @@ No requirements.
 | <a name="input_container_cpu_low_threshold"></a> [container\_cpu\_low\_threshold](#input\_container\_cpu\_low\_threshold) | n/a | `number` | `60` | no |
 | <a name="input_container_memory"></a> [container\_memory](#input\_container\_memory) | Container Memory (RAM). 512 = 512 Mb \| 1024 = 1024 Mb = 1.0 Gb \| 8192 = 8192 Mb = 8.0 Gb (max) | `number` | `512` | no |
 | <a name="input_desired_count"></a> [desired\_count](#input\_desired\_count) | n/a | `number` | `1` | no |
-| <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | n/a | `any` | n/a | yes |
 | <a name="input_ecr_account_id"></a> [ecr\_account\_id](#input\_ecr\_account\_id) | n/a | `any` | n/a | yes |
 | <a name="input_ecr_region"></a> [ecr\_region](#input\_ecr\_region) | n/a | `any` | n/a | yes |
 | <a name="input_entrypoint"></a> [entrypoint](#input\_entrypoint) | n/a | `list(string)` | `null` | no |
