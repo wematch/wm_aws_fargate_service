@@ -1,7 +1,6 @@
 variable vpc_id {}
 variable subnets {}
 variable name_prefix {}
-variable domain_name {}
 variable ecr_region {}
 variable ecr_account_id {}
 variable security_groups {}
